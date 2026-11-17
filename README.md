@@ -15,6 +15,15 @@ Very roughed web for UAV processing
 ## How to run
 - Activate the python virtual environment with the command `.venv\Scripts\activate.bat`.
 - Run `app.py`.
+- Choose some files, upload it, once uploaded, press start analysis and go grab some snack or something (this is gonna take a while).
+- You can use the following variables in `app.py` to speedup the process, but make sure to check the source code before doing that. 
+    - `SKIP_ANALYSIS`
+    - `SKIP_PROCESSING`
+    - `LOW_QUALITY_ODM`
+
+## What is missing
+- UI that doesn't look like raw HTML.
+- "Đánh giá độ chính xác".
 
 # Some pretty pictures
 ## Site preview

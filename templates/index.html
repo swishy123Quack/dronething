@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAV Mapping</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Drone mapping thing idk</h1>
+        <img src="{{ url_for('static', filename='images/poo.png') }}" 
+            alt="UAV logo">
+
+        <h2>Dataset</h2>
+        <input type="file" id="dataset" multiple>
+        <p id="file-info">no files uploaded</p>
+        <button onclick="sendFiles()">Upload Files</button>
+        
+        <h2>Processing</h2>
+        <button onclick="startAnalysis()">Start analysis</button>
+        <p id="odm-status"></p>
+        <img src="{{ url_for('static', filename='images/weee.gif') }}" 
+            alt="UAV logo", id="poo", width="200">
+
+        <pre id="log-output"></pre>
+
+        <h2>Result</h2>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const lol = document.getElementById("poo");
+        lol.style.display = "none";
+
+        let uploaded = false;
+        let result_updated = false;
+
+        updateResult();
+        async function sendFiles(){
+            const files = document.getElementById("dataset").files;
+            const formData = new FormData();
+
+            for (const file of files)
+                formData.append("images", file);
+
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+            const fileInfo = document.getElementById("file-info");
+            fileInfo.textContent = `file uploaded!`;
+
+            uploaded = true;
+        }
+        async function startAnalysis(){
+            const status = document.getElementById("odm-status");
+            if (!uploaded){
+                status.textContent = "no file uploaded!";
+                return;
+            }
+            lol.style.display = "block";
+
+            status.textContent = `found files, beginning analysis...`;
+            await fetch("/start");
+            updateLogs();
+        }
+        async function updateLogs() {
+            const output = document.getElementById("log-output");
+
+            while (true) {
+                const response = await fetch("/logs");
+                const logs = await response.json();
+
+                output.textContent = logs.join("\n");
+                output.scrollTop = output.scrollHeight;
+
+                if (logs.includes("Analysis complete!")) {
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+        async function updateResult() {
+            const result = document.getElementById("result");
+            while (true){
+                const response = await fetch("/result");
+                if (response.status == 200 && !result_updated){
+                    result.innerHTML = await response.text();
+                    result_updated = true;
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000))
+            }
+        }
+    </script>
+</body>
+</html>

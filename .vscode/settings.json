@@ -1,0 +1,8 @@
+
+{
+    "python.analysis.extraPaths": [
+        "D:/QGis/apps/qgis/python/plugins",
+        "D:/QGis/apps/qgis-ltr/python",
+        "D:/QGis/apps/Python312/Lib/site-packages"
+    ]
+}
